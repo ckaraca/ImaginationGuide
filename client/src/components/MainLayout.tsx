@@ -1,6 +1,7 @@
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Home, ChevronLeft, Menu } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -35,7 +36,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <main
         className={`container mx-auto px-4 ${showNav ? "pt-20 pb-6" : "py-6"}`}
       >
-        {children}
+        <AnimatePresence mode="wait">
+          {children}
+        </AnimatePresence>
       </main>
     </div>
   );
