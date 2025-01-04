@@ -6,9 +6,10 @@ import { audioManager } from "@/lib/audio";
 
 interface AudioPlayerProps {
   url: string;
+  onComplete?: () => void;
 }
 
-export function AudioPlayer({ url }: AudioPlayerProps) {
+export function AudioPlayer({ url, onComplete }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(1);
@@ -17,11 +18,17 @@ export function AudioPlayer({ url }: AudioPlayerProps) {
     const interval = setInterval(() => {
       const current = audioManager.getCurrentTime();
       const total = audioManager.getDuration();
-      setProgress((current / total) * 100);
+      const newProgress = (current / total) * 100;
+      setProgress(newProgress);
+
+      // Check if the audio has completed
+      if (newProgress >= 99.5 && onComplete) {
+        onComplete();
+      }
     }, 100);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [onComplete]);
 
   const togglePlay = async () => {
     if (isPlaying) {
